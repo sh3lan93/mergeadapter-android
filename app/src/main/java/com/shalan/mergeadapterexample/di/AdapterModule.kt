@@ -1,6 +1,7 @@
 package com.shalan.mergeadapterexample.di
 
 import com.shalan.mergeadapterexample.adapters.CommitsAdapter
+import com.shalan.mergeadapterexample.adapters.ItemListener
 import com.shalan.mergeadapterexample.adapters.UsersAdapter
 import org.koin.dsl.module
 
@@ -10,6 +11,6 @@ import org.koin.dsl.module
 
 
 val adaptersModule = module {
-	factory { UsersAdapter() }
-	factory { CommitsAdapter() }
+	factory { (listener: ItemListener) -> UsersAdapter(listener) }
+	factory { (listener: ItemListener) -> CommitsAdapter(listener) }
 }

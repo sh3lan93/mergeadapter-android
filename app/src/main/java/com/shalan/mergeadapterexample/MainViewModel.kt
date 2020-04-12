@@ -5,6 +5,7 @@ import com.shalan.mergeadapterexample.models.Commit
 import com.shalan.mergeadapterexample.models.User
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.zipWith
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -35,17 +36,9 @@ class MainViewModel(private val repo: MainRepo) : ViewModel(), LifecycleObserver
 
 	@OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
 	fun fetchUsers() {
-		repo.getUsers().subscribe({
-			users.value = it
-		}, {
-			errorEmitter.value = it.localizedMessage
-		}).addTo(disposable)
-	}
-
-	@OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-	fun fetchCommits() {
-		repo.getCommits().subscribe({
-			commits.value = it
+		repo.getUsers().zipWith(repo.getCommits()).subscribe({
+			users.value = it.first
+			commits.value = it.second
 		}, {
 			errorEmitter.value = it.localizedMessage
 		}).addTo(disposable)

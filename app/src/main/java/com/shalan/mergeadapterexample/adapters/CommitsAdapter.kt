@@ -14,12 +14,13 @@ import com.shalan.mergeadapterexample.models.Commit
  * Created by Mohamed Shalan on 4/12/20.
  */
 
-class CommitsAdapter : ListAdapter<Commit, CommitsAdapter.CommitViewHolder>(diffUtil) {
+class CommitsAdapter(private val listener: ItemListener) :
+	ListAdapter<Commit, CommitsAdapter.CommitViewHolder>(diffUtil) {
 
 	companion object {
 		val diffUtil = object : DiffUtil.ItemCallback<Commit>() {
 			override fun areItemsTheSame(oldItem: Commit, newItem: Commit): Boolean =
-				oldItem == newItem
+				oldItem.id == newItem.id
 
 			override fun areContentsTheSame(oldItem: Commit, newItem: Commit): Boolean =
 				oldItem == newItem
@@ -34,20 +35,25 @@ class CommitsAdapter : ListAdapter<Commit, CommitsAdapter.CommitViewHolder>(diff
 			parent,
 			false
 		)
-		return CommitViewHolder(binding)
+		return CommitViewHolder(binding, listener)
 	}
 
 	override fun onBindViewHolder(holder: CommitViewHolder, position: Int) {
 		holder.bind(getItem(position))
 	}
 
-	inner class CommitViewHolder(private val binding: CommitItemViewLayoutBinding) :
+	inner class CommitViewHolder(
+		private val binding: CommitItemViewLayoutBinding,
+		private val listener: ItemListener
+	) :
 		RecyclerView.ViewHolder(binding.root) {
 
 		fun bind(item: Commit) {
 			binding.commit = item
 			binding.executePendingBindings()
+			binding.root.setOnClickListener {
+				listener.onItemClicked(bindingAdapterPosition)
+			}
 		}
-
 	}
 }
