@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.shalan.mergeadapterexample.adapters.CommitsAdapter
 import com.shalan.mergeadapterexample.adapters.UsersAdapter
 import com.shalan.mergeadapterexample.databinding.ActivityMainBinding
 import org.koin.android.ext.android.inject
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var binding: ActivityMainBinding
 	private val viewModel: MainViewModel by viewModel()
 	private val userAdapter: UsersAdapter by inject()
+	private val commitsAdapter: CommitsAdapter by inject()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -21,10 +23,10 @@ class MainActivity : AppCompatActivity() {
 		binding.lifecycleOwner = this
 		lifecycle.addObserver(viewModel)
 
-		binding.rvUsersAndCommits.adapter = userAdapter
-		viewModel.users_().observe(this, Observer {
+		binding.rvUsersAndCommits.adapter = commitsAdapter
+		viewModel.commits_().observe(this, Observer {
 			if (it.isNotEmpty())
-				userAdapter.submitList(it)
+				commitsAdapter.submitList(it)
 		})
 	}
 }
