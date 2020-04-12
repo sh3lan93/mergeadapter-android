@@ -50,7 +50,7 @@ class UsersAdapter(private val listener: ItemListener) :
 			binding.user = item
 			binding.executePendingBindings()
 			binding.root.setOnClickListener {
-				listener.onItemClicked(bindingAdapterPosition)
+				listener.onItemClicked(adapterPosition)
 			}
 		}
 	}

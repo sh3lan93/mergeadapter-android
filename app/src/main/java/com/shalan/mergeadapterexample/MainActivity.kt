@@ -1,13 +1,11 @@
 package com.shalan.mergeadapterexample
 
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.MergeAdapter
 import com.shalan.mergeadapterexample.adapters.CommitsAdapter
 import com.shalan.mergeadapterexample.adapters.ItemListener
 import com.shalan.mergeadapterexample.adapters.UsersAdapter
@@ -22,19 +20,17 @@ class MainActivity : AppCompatActivity(), ItemListener {
 	private val viewModel: MainViewModel by viewModel()
 	private val userAdapter: UsersAdapter by inject { parametersOf(this) }
 	private val commitsAdapter: CommitsAdapter by inject { parametersOf(this) }
-	lateinit var mergeAdapter: MergeAdapter
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 		binding.lifecycleOwner = this
 		lifecycle.addObserver(viewModel)
-		mergeAdapter = MergeAdapter(commitsAdapter, userAdapter)
 		configureRecycler()
 		observingData()
 	}
 
-	private fun observingData(){
+	private fun observingData() {
 		viewModel.users_().observe(this, Observer {
 			if (it.isNotEmpty())
 				userAdapter.submitList(it)
@@ -51,13 +47,20 @@ class MainActivity : AppCompatActivity(), ItemListener {
 	}
 
 	private fun configureRecycler() {
-		binding.rvUsersAndCommits.addItemDecoration(
+		binding.rvUsers.addItemDecoration(
 			DividerItemDecoration(
 				this,
 				DividerItemDecoration.VERTICAL
 			)
 		)
-		binding.rvUsersAndCommits.adapter = mergeAdapter
+		binding.rvCommits.addItemDecoration(
+			DividerItemDecoration(
+				this,
+				DividerItemDecoration.VERTICAL
+			)
+		)
+		binding.rvUsers.adapter = userAdapter
+		binding.rvCommits.adapter = commitsAdapter
 	}
 
 	override fun onItemClicked(position: Int) {

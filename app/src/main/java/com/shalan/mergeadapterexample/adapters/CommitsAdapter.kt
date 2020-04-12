@@ -52,7 +52,7 @@ class CommitsAdapter(private val listener: ItemListener) :
 			binding.commit = item
 			binding.executePendingBindings()
 			binding.root.setOnClickListener {
-				listener.onItemClicked(bindingAdapterPosition)
+				listener.onItemClicked(adapterPosition)
 			}
 		}
 	}
